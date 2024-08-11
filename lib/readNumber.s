@@ -23,16 +23,16 @@ readNumber:
     movq $1, %r10
     movq $-1, %r11
 
-continueRN0:
+sectionRN0:
     cmpb $'-', %al
     jne .LPRN0
     movq $-1, -8(%rbp)
     lodsb
 .LPRN0:
     cmpb $0, %al
-    je continueRN2
+    je sectionRN2
     cmpb $'.', %al
-    je continueRN1
+    je sectionRN1
 
     subq $'0', %rax
     addq %rax, %r8
@@ -40,12 +40,12 @@ continueRN0:
     lodsb
 
     cmpb $0, %al
-    je continueRN2
+    je sectionRN2
 
     imul $10, %r8 # r8 *= 10
     jmp .LPRN0
 
-continueRN1:
+sectionRN1:
     lodsb
 
     movq %r8, %r11
@@ -55,7 +55,7 @@ continueRN1:
     imul $10, %r8 # r8 *= 10
 .LPRN1:
     cmpb $0, %al
-    je continueRN2
+    je sectionRN2
 
     subq $'0', %rax
     addq %rax, %r8
@@ -65,12 +65,12 @@ continueRN1:
     imul $10, %r10 # r10 *= 10
 
     cmpb $0, %al
-    je continueRN2
+    je sectionRN2
 
     imul $10, %r8  # r8 *= 10
     jmp .LPRN1
 
-continueRN2:
+sectionRN2:
     imul        -8(%rbp), %r8
 
     cvtsi2sd    %r8, %xmm0
@@ -79,12 +79,12 @@ continueRN2:
     cvttsd2si   %xmm0, %rax   # truncated result
 
     cmpq        $0, %r11
-    jne         continueRN3
+    jne         sectionRN3
     movq        $-1, %r11
     cvtsi2sd    %r11, %xmm1
     subsd       %xmm1, %xmm0
 
-continueRN3:
+sectionRN3:
     popq %r11
     popq %r10
     popq %r8

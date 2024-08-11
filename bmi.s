@@ -1,3 +1,6 @@
+/*
+    This program recieve 2 arguments: weight and height. which it uses to calculate bmi.
+*/
 .include "lib/readNumber.s"
 .include "lib/printNumber.s"
 .include "lib/validation.s"
@@ -24,7 +27,7 @@ _start:
 
     # the program must have 2 arguments, 3 including the program name
     cmpq $3, %rbx
-    je continue0
+    je section0
 
     cmpq $1, %rbx
     je exit_usage
@@ -32,30 +35,30 @@ _start:
 	jmp exit_error
 
 # read weight
-continue0:
-    addq $8, %rbp
-    movq (%rbp), %rsi
+section0:
+    addq $8, %rbp       # rbp = argv[1]
+    movq (%rbp), %rdi   # pass the string for validation
     call validation
-    cmpq $0, %rax
+    cmpq $0, %rax       # if not valid exit the program with an error
     jne exit_error
 
-    movq (%rbp), %rdi
-    call readNumber
+    movq (%rbp), %rdi   # pass the string to be parsed
+    call readNumber     # the result is in %xmm0
     movsd %xmm0, weight(%rip)
 
 # read height
-continue1:
-    addq $8, %rbp
-    movq (%rbp), %rsi
+section1:
+    addq $8, %rbp       # rbp = argv[2]
+    movq (%rbp), %rdi   # pass the string for validation
     call validation
-    cmpq $0, %rax
+    cmpq $0, %rax       # if not valid exit the program with an error
     jne exit_error
 
-    movq (%rbp), %rdi
-    call readNumber
+    movq (%rbp), %rdi   # pass the string to be parsed
+    call readNumber     # the result is in %xmm0
     movsd %xmm0, height(%rip)
 
-continue2:
+section2:
     # bmi = weight / (height * height)
     movsd height(%rip), %xmm1
     movsd weight(%rip), %xmm0

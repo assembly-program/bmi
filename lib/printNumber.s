@@ -23,20 +23,20 @@ printNumber:
 	pushq %r11
 	pushq %rbx
 	pushq %rcx
-continuePF0:
+sectionPF0:
 	xor   		%rcx, %rcx            # clear rcx to be used later
 	cvttsd2si 	%xmm0, %rax
 	movq 		%rax, -8(%rbp)
 	movq 		$1, %r11
 
 	testq %rax, %rax
-	jns  continuePF1
+	jns  sectionPF1
 
 	movq 	 $-1, %rax
 	cvtsi2sd %rax, %xmm1
 	mulsd    %xmm1, %xmm0
 
-continuePF1:
+sectionPF1:
 	movq      $10, %r8
 	cvttsd2si %xmm0, %r9
 	cmpq	  $0, %rdi
@@ -56,14 +56,14 @@ continuePF1:
 	cvtsd2si 	%xmm0, %r10
 	movq		%rax, %r11
 
-	jmp continuePF2
+	jmp sectionPF2
 
 .LPPF1:
 	cvttsd2si %xmm0, %r10     # convert into integer truncating the decimal points
 	cvtsi2sd  %r10, %xmm2     # convert it back to a rounded up decimal form
 
 	comisd    %xmm2, %xmm0     # compare to see if there is any decimal points in xmm0
-	je        continuePF2      # if the truncated value is the equal to the actual value, break the loop
+	je        sectionPF2      # if the truncated value is the equal to the actual value, break the loop
 
 	# multiply by ten and repeat
 	imul  		%r8, %r11
@@ -71,7 +71,7 @@ continuePF1:
 	mulsd 		%xmm1, %xmm0
 	jmp   		.LPPF1
 
-continuePF2:
+sectionPF2:
 	movq %r9, %rax
 	imul %r11, %rax
 	imul $1, %r11
@@ -106,11 +106,11 @@ continuePF2:
 	jne  .LPPF3
 
 	cmpq   $0, -8(%rbp)
-	jns    continuePF3
+	jns    sectionPF3
 	pushq  $'-'
 	incq   %rcx
 
-continuePF3:
+sectionPF3:
 	movq %rcx, %rbx
 .LPPF4:
 	popq %rax
