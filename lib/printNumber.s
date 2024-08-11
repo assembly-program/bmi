@@ -1,6 +1,8 @@
 .section .data
 digit: .ascii "0"
+
 .section .text
+
 # r8 is 10, the divisor
 # r9 is the integer part
 # r10 is the decimal part
@@ -13,8 +15,7 @@ digit: .ascii "0"
 printNumber:
 	pushq %rbp
 	movq  %rsp, %rbp
-	subq  $16, %rsp
-	movq %rdi, -8(%rbp)
+	subq  $8, %rsp
 
 	pushq %r8
 	pushq %r9
@@ -22,14 +23,12 @@ printNumber:
 	pushq %r11
 	pushq %rbx
 	pushq %rcx
-
 continuePF0:
 	xor   		%rcx, %rcx            # clear rcx to be used later
 	cvttsd2si 	%xmm0, %rax
-	movq 		%rax, -16(%rbp)
+	movq 		%rax, -8(%rbp)
 	movq 		$1, %r11
 
-	# cmpq $0, %rax
 	testq %rax, %rax
 	jns  continuePF1
 
@@ -106,7 +105,7 @@ continuePF2:
 	cmpq $0, %rax
 	jne  .LPPF3
 
-	cmpq   $0, -16(%rbp)
+	cmpq   $0, -8(%rbp)
 	jns    continuePF3
 	pushq  $'-'
 	incq   %rcx

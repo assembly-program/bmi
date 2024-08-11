@@ -1,9 +1,9 @@
-# rdi holds the first argument
+.section .text
+
 # r8 holds the integer form of the number
 # r10 is the scale factor with initial value of 1
 # xmm0 holds the result in decimal form
 # rax holds the result in truncated integer form
-.section .text
 .global readNumber
 .type readNumber, @function
 readNumber:
