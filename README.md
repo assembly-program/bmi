@@ -1,5 +1,5 @@
 # bmi
-This program calculates the body mass index, or bmi, based on weight and weight
+an assembly program that calculates the body mass index, or bmi, based on weight and weight
 
 # Build & run
 - the make file uses the as and ld commands to build the program
